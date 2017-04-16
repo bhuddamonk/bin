@@ -1,8 +1,11 @@
 #!/bin/bash
 
-#Script to clean out the boot partition
+# Script to clean out the boot partition
+# For Debian based systems only
+
 # Exit script on error
 set -e
+
 #turn debugging on and off
 #set -x
 
@@ -30,8 +33,13 @@ if [ "$answer" == 'Y' ] || [ "$answer" == 'y' ]; then
       sudo rm -f "/boot/$i"
       echo deleting: $i | tr " " "\n"
     done
+
+    #Clean up any old kernel packages
     echo
-    echo -e "Disk on the /boot partition is now $(df -h /boot | awk ' /[0-9]/ {print $5}' ) full.\n"
+    echo 'Cleaning out old kernel packages:'
+      sudo apt-get autoremove
+    echo
+      echo -e "Disk on the /boot partition is now $(df -h /boot | awk ' /[0-9]/ {print $5}' ) full.\n"
 else
     echo 'Exiting script. Try running 'sudo apt-get clean' instead.'
 fi
